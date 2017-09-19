@@ -1,6 +1,9 @@
 package java眼中xml文件读取;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -11,11 +14,13 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 public class JDOMTest {
 	static ArrayList<Books> booksList = new ArrayList<Books>();
 
-	public static void main(String[] args) throws JDOMException, IOException {
+	public void XMLRead() throws JDOMException, IOException {
 		// books.xml文件的JDOM解析
 		SAXBuilder saxBuilder = new SAXBuilder();
 		// 创建输入流
@@ -69,7 +74,34 @@ public class JDOMTest {
 			System.out.println(booksList);
 			System.out.println(booksList.get(0).getName());
 		}
+	}
 
+	private void creatXML() throws FileNotFoundException, IOException {
+		// 根节点
+		Element rss = new Element("rss");
+		rss.setAttribute("version", "2.0");
+
+		// 生成document对象
+		Document document = new Document(rss);
+		Element channel = new Element("channel");
+		rss.addContent(channel);
+		Element title = new Element("title");
+		title.setText("<![国内最新新闻]>");
+		channel.addContent(title);
+		Format format = Format.getCompactFormat();
+		// 设置换行
+		format.setIndent("");
+		format.setEncoding("gbk");
+		// 生成xml
+		XMLOutputter outputer = new XMLOutputter();
+		// 将document转换成xml文档
+		outputer.output(document, new FileOutputStream(new File("G:/java_study/code/文件传输基础目录/createJDOMXML.xml")));
+
+	}
+
+	public static void main(String[] args) throws JDOMException, IOException {
+		JDOMTest jdt = new JDOMTest();
+		jdt.creatXML();
 	}
 
 }
